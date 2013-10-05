@@ -2,19 +2,31 @@
 
 import tkinter
 from tkinter import *
+import logging
+import datetime
+import time
 import sys, os.path
+
+d = datetime.datetime.today()
+LOG_FILENAME = d.strftime("log/%Y%m%d.log")
 tk = tkinter.Tk()
 tk.title('WAVEConverter')
-#tk.minsize(width = tk.winfo_width(), height = tk.winfo_height())
 
 filenames = StringVar()
 filenames.set("")
+
 def select_files():
     filenames.set(filedialog.askopenfilenames(filetypes = [('CUE Files', ('.cue'))],
                                               initialdir = 'D:/temp', 
                                               title = "ファイル選択"))
-def show_logwindow():
+def convert_files():
+    logging.basicConfig(filename = LOG_FILENAME,
+                        level = logging.DEBUG)
+    logger = logging.getLogger('Logger')
+    logger.debug('This message should go to the log file')
+    time.sleep(1)
     return
+
 #LabelFrame:ファイル選択
 f0 = LabelFrame(tk, text = 'ファイル選択', labelanchor = NW)
 #Entry:ファイル名を表示
@@ -30,7 +42,7 @@ f0.pack(padx = 10, pady = 10, expand = True, fill = X)
 f1 = Frame(tk)
 #Button:変換開始
 a = Button(f1, text = '変換', width = 5,
-           command = show_logwindow)
+           command = convert_files)
 a.pack(padx = 10, side = LEFT, anchor = CENTER)
 #Button:閉じる
 """
