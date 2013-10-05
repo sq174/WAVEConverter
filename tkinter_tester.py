@@ -5,6 +5,7 @@ from tkinter import *
 import logging
 import datetime
 import time
+import re
 import sys, os.path
 
 d = datetime.datetime.today()
@@ -12,25 +13,27 @@ LOG_FILENAME = d.strftime("log/%Y%m%d.log")
 tk = tkinter.Tk()
 tk.title('WAVEConverter')
 
-filenames = StringVar()
-filenames.set("")
+entry_buffer = StringVar()
+entry_buffer.set("")
 
 def select_files():
-    filenames.set(filedialog.askopenfilenames(filetypes = [('CUE Files', ('.cue'))],
+    entry_buffer.set(filedialog.askopenfilenames(filetypes = [('CUE Files', ('.cue'))],
                                               initialdir = 'D:/temp', 
                                               title = "ファイル選択"))
 def convert_files():
     logging.basicConfig(filename = LOG_FILENAME,
                         level = logging.DEBUG)
     logger = logging.getLogger('Logger')
-    logger.debug('This message should go to the log file')
-    time.sleep(1)
-    return
-
+    logger.debug('begin convert')
+    ##########################ここから#############################
+    filenames = re.findall("\{.+\.cue\}", entry_buffer.get())
+    
+    
+    
 #LabelFrame:ファイル選択
 f0 = LabelFrame(tk, text = 'ファイル選択', labelanchor = NW)
 #Entry:ファイル名を表示
-e = Entry(f0, textvariable = filenames, borderwidth = 2)
+e = Entry(f0, textvariable = entry_buffer, borderwidth = 2)
 e.pack(padx = 5, pady = 5, side = LEFT, expand = True, fill = X)
 #Button:ファイル選択ダイアログを開く
 a = Button(f0, text = '...', width = 5, 
