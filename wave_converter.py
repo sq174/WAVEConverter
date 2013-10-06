@@ -26,7 +26,7 @@ def convert_files():
     logger = logging.getLogger('Logger')
     logger.debug('begin convert')
     ##########################ここから#############################
-    filenames = re.findall("\{.+\.cue\}", entry_buffer.get())
+    filenames = entry_buffer.get().strip('{}').split('} {')
     
     
     
