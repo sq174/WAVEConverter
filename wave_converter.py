@@ -6,7 +6,9 @@ import logging
 import datetime
 import time
 import re
-import sys, os.path
+import glob
+import sys
+import os
 
 d = datetime.datetime.today()
 LOG_FILENAME = d.strftime("log/%Y%m%d.log")
@@ -24,10 +26,29 @@ def convert_files():
     logging.basicConfig(filename = LOG_FILENAME,
                         level = logging.DEBUG)
     logger = logging.getLogger('Logger')
-    logger.debug('begin convert')
-    ##########################ここから#############################
+    logger.debug('begin convertion')
+    ##########################ファイル処理ここから#############################
     filenames = entry_buffer.get().strip('{}').split('} {')
-    
+    for filename in filenames:
+        if not os.path.exists(filename):
+            logger.waring('file not found:' + filename)
+            continue
+        os.chdir(os.path.dirname(filename))
+        name = filename.split('/')[-1].rstrip('cueCUE')
+        #ファイルチェック
+        all_files_exist = True
+        if not os.path.exists(name + 'cue'):#.CUEファイルチェック
+            logger.error('CUE file not exists:' + name)
+            all_files_exist = False
+        if not os.path.exists(name + 'wav'):#.WAVファイルチェック
+            logger.error('WAV file not exists:' + name)
+            all_files_exist = False
+        if not os.path.exists(name + 'log'):#.LOGファイルチェック
+            logger.error('LOG file not exists:' + name)
+            all_files_exist = False
+        if not all_files_exist:
+            continue
+        #mp3作成
     
     
 #LabelFrame:ファイル選択
